@@ -8,30 +8,9 @@ import {
   ReactGoogleChartEvent,
 } from "react-google-charts";
 import ReportTable from "./ReportTable";
+import { fetchReport } from "./api/report";
 
 export interface IReportProps {}
-
-const BASE_API = "http://localhost:3001/report";
-
-export type ReportFile = {
-  path: string;
-  name: string;
-  size: number;
-  created: string;
-  modified: string;
-  type: string;
-};
-type ReportResponse = {
-  total: number;
-  countsPerType: { [key: string]: number };
-  files: ReportFile[];
-};
-
-const fetchReport = async (path: string, selectedType: string) => {
-  const res = await fetch(`${BASE_API}?path=${path}&type=${selectedType}`);
-  if (res.status !== 200) throw Error("Invalid Request");
-  return (await res.json()) as ReportResponse;
-};
 
 export default function Report(props: IReportProps) {
   const location = useLocation();
@@ -39,7 +18,7 @@ export default function Report(props: IReportProps) {
   const [selectedType, setSelectedType] = React.useState("");
 
   React.useEffect(() => {
-    setSelectedType('');
+    setSelectedType("");
   }, [path]);
 
   const { isFetching, isError, data } = useQuery(
@@ -78,13 +57,20 @@ export default function Report(props: IReportProps) {
       </div>
       <div className="container pt-8 m-auto">
         {isFetching && <div className="text-slate-500 center">Loading...</div>}
+        
         {isError && (
           <div className="text-red-500 center">Error: Invalid Path</div>
         )}
+
         {!isFetching && !isError && (
           <div className="flex gap-8">
             <div className="w-[30rem]">
-              <div className="text-lg">Found<span className="text-green-500 font-semibold"> {total} </span>files</div>
+              <div className="text-lg">
+                Found
+                <span className="text-green-500 font-semibold"> {total} </span>
+                files
+              </div>
+
               <Chart
                 chartType="PieChart"
                 data={chartData}
@@ -95,6 +81,7 @@ export default function Report(props: IReportProps) {
                 }}
                 chartEvents={chartEvents}
               />
+
               <Chart
                 chartType="BarChart"
                 data={chartData}
@@ -108,11 +95,12 @@ export default function Report(props: IReportProps) {
                 }}
                 chartEvents={chartEvents}
               />
+
             </div>
             <div className="flex-1">
               <div className="text-2xl mb-4">
-                {selectedType ? countsPerType[selectedType] : total}{' '}
-                <span className="text-blue-500">{selectedType}</span> files{' '}
+                {selectedType ? countsPerType[selectedType] : total}{" "}
+                <span className="text-blue-500">{selectedType}</span> files{" "}
                 <span className="text-base text-gray-400">
                   (showing {files.length} files)
                 </span>

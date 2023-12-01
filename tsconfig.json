@@ -22,6 +22,6 @@
     "experimentalDecorators": true,
     "resolveJsonModule": true
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "**/__tests__/**/*.[jt]s", "**/?(*.)+(spec|test).[tj]s"],
   "include": ["./server/src"]
 }

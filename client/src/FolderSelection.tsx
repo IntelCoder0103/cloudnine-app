@@ -5,13 +5,7 @@ interface IFolderSelectionProps{
 }
 const FolderSelection = ({ defaultPath }: IFolderSelectionProps) => {
   const [folderPath, setFolderPath] = useState<string>(defaultPath);
-  // const location = useLocation();
   const navigate = useNavigate();
-  // const path = new URLSearchParams(location.search).get('path') || '';
-
-  // useEffect(() => {
-  //   setFolderPath(decodeURIComponent(path));
-  // }, [path]);
 
   const handleFolderPathChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -39,6 +33,7 @@ const FolderSelection = ({ defaultPath }: IFolderSelectionProps) => {
           placeholder="Input your path here."
           className="p-4 outline-none rounded-s-xl flex-grow"
           onKeyDown={handleKeyDown}
+          data-testId="folder-path-input"
         />
         <button
           className="bg-slate-600 text-white p-4 cursor-pointer rounded-e-xl"

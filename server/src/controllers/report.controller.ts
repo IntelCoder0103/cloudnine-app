@@ -1,9 +1,9 @@
-import { Router } from "express";
+import { RequestHandler, Router } from "express";
 import fs from "fs/promises";
 import path from "path";
 
 const router = Router();
-async function getAllFiles(dir: string) {
+async function _getAllFiles(dir: string) {
   try {
     const files = await fs.readdir(dir, { withFileTypes: true });
     let fileStatsArray: {
@@ -17,7 +17,7 @@ async function getAllFiles(dir: string) {
     for (const file of files) {
       const filePath = path.resolve(dir, file.name);
       if (file.isDirectory()) {
-        fileStatsArray = fileStatsArray.concat(await getAllFiles(filePath));
+        fileStatsArray = fileStatsArray.concat(await _getAllFiles(filePath));
       } else {
         const stat = await fs.stat(filePath);
         const fileType = file.name.match(/.*\.(\w*)$/)?.[1] || '';
@@ -37,32 +37,36 @@ async function getAllFiles(dir: string) {
     return [];
   }
 }
-router.get("/", async (req, res) => {
-  let { path = "", type = "" } = req.query;
-  path = path.toString();
+export const getReport: RequestHandler = async (req, res) => {
+  const { path = "", type = "" } = req.query;
+  const pathStr = path.toString();
 
   try {
     // Check if the path is valid
-    await fs.access(path);
+    await fs.access(pathStr);
   } catch (e) {
     console.error(e);
     res.status(400).send({ message: "Invalid Directory" });
     return;
   }
 
-  const stats = await getAllFiles(path);
+  const stats = await _getAllFiles(pathStr);
   const total = stats.length;
   const countsPerType: { [key: string]: number } = {};
   for (const stat of stats) {
     countsPerType[stat.type] = (countsPerType[stat.type] || 0) + 1;
   }
-  const files = stats.filter(stat => !type || stat.type === type).slice(0, 100);
+  const files = stats
+    .filter((stat) => !type || stat.type === type)
+    .slice(0, 100);
 
   res.json({
     total,
     countsPerType,
     files,
   });
-});
+};
+
+router.get("/", getReport);
 
 export default router;

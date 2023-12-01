@@ -47,14 +47,14 @@ npx degit apicgg/vite-mern-template my-app
 - Backend
 
 ```bash
-npm install
+yarn
 ```
 
 - Frontend
 
 ```bash
 cd client
-npm install
+yarn
 ```
 
 ## Start the development server
@@ -62,25 +62,22 @@ npm install
 - Backend
 
 ```bash
-npm run watch
-npm run server
+yarn watch
+yarn server
 ```
 
 - Frontend
 
 ```bash
-npm run client
+yarn client
 ```
 
 - Remove the .git folder and initialize your own git repository.
-- In this case `npm run watch` needs to be executed before starting the development server with `npm run server` on different terminal sessions as the TypeScript files (backend) need to be compiled to JavaScript before staring the dev server with node.
-- To build run `npm run build:server` and `npm run build:client`.
+- In this case `yarn watch` needs to be executed before starting the development server with `yarn server` on different terminal sessions as the TypeScript files (backend) need to be compiled to JavaScript before staring the dev server with node.
+- To build run `yarn build:server` and `yarn build:client`.
 
-## TODO
-
-- [x] Include eslint and prettier.
-- [ ] Add testing frameworks.
-- [ ] Create a npm CLI library for scaffolding projects.
+## Screenshot
+<img src="./screenshots/screen1.png" />
 
 ## License
 

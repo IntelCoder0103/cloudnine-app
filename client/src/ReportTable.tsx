@@ -1,5 +1,4 @@
 import * as React from "react";
-import { ReportFile } from "./Report";
 
 export interface IReportTableProps {
   files: ReportFile[];
